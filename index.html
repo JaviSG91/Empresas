@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Formulario</title>
+</head>
+   
+<script type="text/javascript">
+
+function listar(){
+	
+	if(document.getElementById("empresa").value=="")
+		alert("Inserta un nombre en Empresa");
+	else{
+	  var frm=document.getElementById("form");	
+	  frm.action="listaCalif";
+	  frm.submit();
+	}
+}
+
+function creaEmpresa(){
+	
+	if(document.getElementById("empresa").value=="")
+		alert("Inserta un nombre en Empresa");
+	else{
+	  var frm=document.getElementById("form");	
+	  frm.action="creaEmpresa";
+	  frm.submit();
+	}
+}
+
+function creaCalif(){
+	
+	if(document.getElementById("empresa").value==""||document.getElementById("alumno").value==""||document.getElementById("nota").value=="")
+		alert("Inserta un nombre en Empresa, en Alumno y en Calificación");
+	else{
+	  var frm=document.getElementById("form");	
+	  frm.action="creaCalif";
+	  frm.submit();
+	}
+}
+
+function borraCalif(){
+	
+	if(document.getElementById("empresa").value==""||document.getElementById("alumno").value=="")
+		alert("Inserta un nombre en Empresa y en Alumno");
+	else{
+	  var frm=document.getElementById("form");	
+	  frm.action="borraCalif";
+	  frm.submit();
+	}
+}
+</script>
+<body>
+  
+  <form id="form" action="creaEmpresa" method="post">
+  Empresa:
+  <input id="empresa" type="text" name="empresa" size="10"><br>
+  Alumno:
+  <input id="alumno" type="text" name="alumno" size="10"><br>
+  Calificacion:
+  <input id="nota" type="text" name="nota" size="10"><br>
+
+</form>
+
+<ul>
+	<li onclick="creaEmpresa()"><a href="#">Crear empresa</a></li>
+	<li id="list" onclick="listar()"><a href="#">Listar calificaciones</a></li>
+	<li  onclick="creaCalif()"><a href="#">Crear calificacion</a></li>
+	<li onclick="borraCalif()"><a href="#">Borrar calificacion</a></li>
+	<li><a href="http://localhost:3000/Ranking"/>Ranking</a></li>
+	
+</ul>
+</body>
+</html>
