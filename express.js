@@ -3,45 +3,44 @@ var db = new sqlite3.Database('./empresa.db');
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-var info="";
+var empresa=[];
 
-//especificamos el subdirectorio donde se encuentran las páginas estáticas
+
 app.use(express.static(__dirname));
 
-//extended: false significa que parsea solo string (no archivos de imagenes por ejemplo)
 app.use(bodyParser.urlencoded({ extended: false }));
 
-
+//RANKING
 app.get('/Ranking', function(req, res){
 	var v=[];
-	db.each("SELECT nombreEmpresa, AVG(nota) AS media FROM calificacion GROUP BY nombreEmpresa order by media desc ", function(err, rows) {
-		v.push(rows.nombreEmpresa+"   "+rows.media+"<br>");
-
-	},function(){
-		var pagina='<!doctype html><html><head></head><body>';
-	    	for(i=0;i<v.length;i++)
-			pagina +=v[i];
-	    	pagina += '<a href="index.html">Volver</a>';
-	    	pagina += '</body></html>';
+	var pagina='<!doctype html><html><head></head><body>';
+	empresa.ranking(function(error, data) {
+	     for(i=0;i<data.length;i++)
+		pagina +=data[i].nombreEmpresa+" con media:"+data[i].media+"<br>";
+	     pagina += '<a href="index.html">Volver</a>';
+             pagina += '</body></html>';
+	     	
 		
-		res.send(pagina);
-
+	     
+	     res.send(pagina);
+	   
 	});
+	
+	
+	
 	
 	
 	
 });
 
+//Lista de calificaciones para una empresa
 app.post('/listaCalif', function(req, res){
 	
-	var v=[];
-	db.each("SELECT nombreAlumno, nota FROM calificacion WHERE nombreEmpresa='"+req.body.empresa+"'", function(err, rows) {
-		v.push(rows.nombreAlumno+"   "+rows.nota+"<br>");
-
-	},function(){
+	
+	listaCalificaciones(req.body.empresa,function(error,data){
 		var pagina='<!doctype html><html><head></head><body>';
-		for(i=0;i<v.length;i++)
-			pagina +=v[i];
+		for(i=0;i<data.length;i++)
+			pagina +=data[i].nombreAlumno+" con nota:"+data[i].nota+"<br>";
 		
 	    	pagina += '<a href="index.html">Volver</a>';
 	    	pagina += '</body></html>';
@@ -59,27 +58,21 @@ app.post('/listaCalif', function(req, res){
     	
    
 });
+
+//Pagina principal
 app.get('/page', function(req, res){
 	res.sendfile(__dirname + '/index.html');
 	
    
 });
 
-
+//Crea una empresa que no exista previamente
 app.post('/creaEmpresa', function(req, res){
-	//console.log("."+req.body.empresa);
-	var v=[];
-	db.serialize(function() {
-	db.each("SELECT nombre FROM empresa where nombre='"+req.body.empresa+"'", function(err, rows) {
-		
 	
-			v.push({nombre:rows.nombre});
-		
-		 
-		},function(){
-			 
-			 console.log(info+"in");
-			if(v.length==0){
+	var v=[];
+	empresa.ExisteEmpresa(req.body.empresa,function(error,data){
+		console.log(data);
+		if(!data){
 		
 				 db.run("Insert into empresa values(?)", {
 				  1: req.body.empresa,
@@ -91,8 +84,8 @@ app.post('/creaEmpresa', function(req, res){
 			    	pagina += '</body></html>';
 	
 	
-			}
-			else{
+		}
+		else{
 				var pagina='<!doctype html><html><head></head><body>';
 			    	pagina +="La empresa ya existe";
 			    	pagina += '<a href="index.html">Volver</a>';
@@ -106,7 +99,7 @@ app.post('/creaEmpresa', function(req, res){
 	
 
 
-	});
+	
 	});
 	
 
@@ -115,6 +108,7 @@ app.post('/creaEmpresa', function(req, res){
 	
 });
 
+//crea una calificacion nueva para una empresa existente
 app.post('/creaCalif', function(req, res){
 	//console.log("."+req.body.empresa);
 	var v=[];
@@ -185,6 +179,7 @@ app.post('/creaCalif', function(req, res){
 	
 });
 
+//borra una calificacion
 app.post('/borraCalif', function(req, res){
 	var v=[];
 	db.serialize(function (){
@@ -215,5 +210,63 @@ app.post('/borraCalif', function(req, res){
 	
 });
 
+empresa.ranking = function(res){
+	
+	
+	db.all("SELECT nombreEmpresa, AVG(nota) AS media FROM calificacion GROUP BY nombreEmpresa order by media desc ", function(err, rows) {
+			
+ 			if (err)
+  			      throw err;
+  			
+			else
+				res(null, rows);
+			      
+			
+
+	});	
+}
+
+var listaCalificaciones = function(req,res){
+	
+	
+	db.all("SELECT nombreAlumno, nota FROM calificacion WHERE nombreEmpresa='"+req+"'", function(err, rows) {
+		
+
+	
+ 			if (err)
+  			      throw err;
+  			
+			else
+				res(null, rows);
+			      
+			
+
+	});	
+}
+
+empresa.ExisteEmpresa = function(req,res){
+	
+	
+	db.all("SELECT nombre FROM empresa where nombre='"+req+"'", function(err, rows) {
+		
+			//console.log(rows.length);
+	
+ 			if (err)
+  			      throw err;
+  			
+			else{
+				
+				if(rows.length!=0)
+					res(null, true);
+				else
+					res(null,false);
+			}
+			      
+			
+
+	});	
+}
 
 app.listen(3000);
+exports.app = app;
+module.exports = empresa;

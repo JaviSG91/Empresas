@@ -1,0 +1,28 @@
+empresa = require("../express");
+var assert = require("assert");
+describe('Empresa', function(){
+		// Testea que se haya cargado bien la librería
+		
+		it('Deberia existir', function(){
+			empresa.ExisteEmpresa(
+				"Microsot",function(err,data){
+				assert.equal(data,false);
+			
+	
+
+			});
+		 	
+		});
+
+		 it("has a nice welcoming message", function (done) {
+       		 request(app.listen())
+            	.get("/")
+            	.expect("Koa says Hi!")
+            	.end(done);
+    });
+		
+
+});
+
+
+
