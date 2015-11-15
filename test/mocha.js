@@ -41,17 +41,7 @@ describe('Empresa', function(){
 			 });
 			
 		});*/
-		it('Ranking', function(done) {
-		    empresa.ranking(function(error, data) {
-		     // _.each(data, function(valor) {
-			data.should.have.property("nombre");
-			data.should.have.property("media");
-
-		      });
-		    //});
-		    done();
-		  });
-	
+		
 		 
 		
 

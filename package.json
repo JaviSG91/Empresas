@@ -13,12 +13,9 @@
     "grunt-docco": "~0.4.0",
     "docco": "~0.7.0"
   },
-  "script": {
-    "test": "mocha test/mocha.js"
-  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/JaviSG91/Empresas.git"
+    "url": "git+https://github.com/JaviSG91/Empresas.git"
   },
   "keywords": [
     "empresa",
@@ -29,5 +26,13 @@
   "license": "BSD-2-Clause",
   "bugs": {
     "url": "https://github.com/JaviSG91/Empresas/issues"
+  },
+  "homepage": "https://github.com/JaviSG91/Empresas#readme",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
   }
 }
