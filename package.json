@@ -14,7 +14,7 @@
     "docco": "~0.7.0"
   },
   "script": {
-    "test": "mocha"
+    "test": "mocha test/mocha.js"
   },
   "repository": {
     "type": "git",
